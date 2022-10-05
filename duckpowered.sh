@@ -129,8 +129,11 @@ elif [ "$1" = "install" ]; then
 	    echo "intel_pstate not found, you are good to go!"
     fi
     echo "DuckPowered has been installed."
+    echo "Please reboot to start DuckPowered."
 else
     echo "Unknown argument: " "$1"
+    echo "To install DuckPowered, please run sudo duckpowered install"
+    echo "If you've already done this, and rebooted, DuckPowered is automatically running in the background right now"
 fi
 
 
