@@ -1,0 +1,19 @@
+name: duckpowered
+base: core20
+version: '0.1'
+summary: Intelligent power savings that don't effect performance.
+description: |
+  Tweet tweet.
+grade: stable
+confinement: classic
+
+apps:
+  duckpowered:
+    command: usr/bin/run
+
+parts:
+  copy-runscript:
+    plugin: dump
+    source: .
+    organize:
+      duckpowered.sh: usr/bin/run
