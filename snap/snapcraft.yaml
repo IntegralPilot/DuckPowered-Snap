@@ -15,5 +15,8 @@ parts:
   copy-runscript:
     plugin: dump
     source: .
+    override-build: |
+      snapcraftctl build
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/duckpowered.sh
     organize:
       duckpowered.sh: usr/bin/run
