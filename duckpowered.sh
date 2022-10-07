@@ -94,13 +94,9 @@ do
 		done
 	fi
 done
-	fi
 elif [ "$1" = "install" ]; then
     echo "Installing DuckPowered v0.1+6bec82b..."
     echo "Stage [1/2] Configuring crontab..."
-    mkdir /etc/duckpowered
-    cd /etc/duckpowered || exit
-    chmod +x duckpowered-bin.sh
     crontab -l > cron_bkp
     echo "@reboot duckpowered start" >> cron_bkp
     crontab cron_bkp
@@ -115,12 +111,16 @@ elif [ "$1" = "install" ]; then
 	    if [ "$consent" = "y" ]; then
 		    echo "Okay then!"
 		    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT='/&intel_pstate=disable /" /etc/default/grub
-		    touch .pstate_disabled
+		    mkdir /etc/duckpowered
+		    cd /etc/duckpowered || exit
+		    touch .pstate_disabled #note the disable for a future uninstall program
 		    update-grub
 	    elif [ "$consent" = "Y" ]; then
 		    echo Okay then!
 		    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT='/&intel_pstate=disable /" /etc/default/grub
-		    touch .pstate_disabled
+		    mkdir /etc/duckpowered
+		    cd /etc/duckpowered || exit
+		    touch .pstate_disabled #note the disable for a future uninstall program
 		    update-grub
 	    else
 		    echo "Aborting intel_pstate disable. Note that DuckPowered may not function properly (or at all) without this disable."z
