@@ -1,6 +1,6 @@
 name: duckpowered
 base: core20
-version: '0.1'
+version: '0.1a'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
@@ -29,8 +29,21 @@ apps:
       - duckpowered-system-observe
     daemon: simple    
 
+hooks:
+  install:
+    plugs:
+      - duckpowered-system-files
+      # the following may not be needed
+      - duckpowered-system-observe
+  remove:
+    plugs:
+      - duckpowered-system-files
+      # the following may not be needed
+      - duckpowered-system-observe
+    
+
 parts:
-  copy-runscript:
+  runscript:
     plugin: dump
     source: .
     override-build: |
@@ -48,6 +61,25 @@ parts:
       apt install kmod
       duckpowered_mploc=$(whereis modprobe | awk '{print $2}')
       cp "$duckpowered_mploc" $SNAPCRAFT_PART_INSTALL/cargo/root
+      apt install grub-common
+      duckpowered_roachloc=$(whereis grub-mkconfig | awk '{print $2}')
+      cp "$duckpowered_roachloc" $SNAPCRAFT_PART_INSTALL/cargo/root
       
     organize:
       duckpowered.sh: usr/bin/run
+  install-hook:
+      plugin: dump
+      source: .
+      override-build: |
+        snapcraftctl build
+        chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered-install-hook.sh
+      organize:
+        duckpowered-install-hook.sh: snap/hooks/install
+  remove-hook:
+      plugin: dump
+      source: .
+      override-build: |
+        snapcraftctl build
+        chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered-remove-hook.sh
+      organize:
+        duckpowered-remove-hook.sh: snap/hooks/remove

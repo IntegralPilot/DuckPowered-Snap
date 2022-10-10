@@ -1,11 +1,5 @@
 #!/bin/bash
 if [ "$1" = "start" ]; then
-	if [ -f $SNAP_USER_DATA/.runbefore ]; then
-		echo "Already Run, skipping setup..."
-	else
-		echo "Not already run"
-		duckpowered install
-	fi
 underpowered_devicecores=$($SNAP/cargo/getconf _NPROCESSORS_ONLN)
 underpowered_activecores=$($SNAP/cargo/getconf _NPROCESSORS_ONLN)
 echo "DEVICECORES " "$underpowered_devicecores"
@@ -52,7 +46,7 @@ do
 			underpowered_shutdownpath_part1="/sys/devices/system/cpu/cpu"
 			underpowered_shutdownpath_part2="/cpufreq/scaling_max_freq"
 			underpowered_totalshutdownpath=$(echo $underpowered_shutdownpath_part1$underpowered_turnoff_now$underpowered_shutdownpath_part2)
-			echo "$underpowered_max_freq" > "$underpowered_totalshutdownpath"
+			echo "$underpowered_min_freq" > "$underpowered_totalshutdownpath"
 			underpowered_turnoff_now=$(expr "$underpowered_turnoff_now" + 1)
 			underpowered_activecores=$(expr "$underpowered_activecores" - 1)
 		done
@@ -101,13 +95,13 @@ do
 	fi
 done
 elif [ "$1" = "install" ]; then
-    echo "Installing DuckPowered v0.1a..."
-    echo "Stage [1/2] Configuring local storage..."
-    cd $SNAP_USER_DATA/duckpowered || mkdir $SNAP_USER_DATA/duckpowered; cd $SNAP_USER_DATA/duckpowered
-    echo "Stage [2/2] Checking for intel_pstate..."
-    duckpoweredi_pstate=$(grep -q active /sys/devices/system/cpu/intel_pstate/status && echo "pstate active !")
-    duckpoweredi_toxic="pstate active !"
-    if [ "$duckpoweredi_pstate" = "$duckpoweredi_toxic" ]; then
+echo "Installing DuckPowered v0.1a..."
+echo "Stage [1/2] Configuring local storage..."
+cd $SNAP_USER_DATA/duckpowered || mkdir $SNAP_USER_DATA/duckpowered; cd $SNAP_USER_DATA/duckpowered || exit
+echo "Stage [2/2] Checking for intel_pstate..."
+duckpoweredi_pstate=$(grep -q active /sys/devices/system/cpu/intel_pstate/status && echo "pstate active !")
+duckpoweredi_toxic="pstate active !"
+if [ "$duckpoweredi_pstate" = "$duckpoweredi_toxic" ]; then
 	    echo "[!] intel_pstate found!"
 	    echo "We will now disable the intel_pstate driver as it causes issue with DuckPowered, do you consent [Y/N]?"
 	    read -r consent
@@ -115,21 +109,21 @@ elif [ "$1" = "install" ]; then
 		    echo "Okay then!"
 		    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT='/&intel_pstate=disable /" /etc/default/grub
 		    touch .pstate_disabled #note the disable for a future uninstall program
-		    update-grub
+		    set -e
+    		$SNAP/cargo/root/grub-mkconfig -o /boot/grub/grub.cfg "$@"
 	    elif [ "$consent" = "Y" ]; then
 		    echo Okay then!
 		    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT='/&intel_pstate=disable /" /etc/default/grub
 		    touch .pstate_disabled #note the disable for a future uninstall program
-		    update-grub
+		    set -e
+    		$SNAP/cargo/root/grub-mkconfig -o /boot/grub/grub.cfg "$@"
 	    else
 		    echo "Aborting intel_pstate disable. Note that DuckPowered may not function properly (or at all) without this disable."
-	fi
-    else
-	    echo "intel_pstate not found, you are good to go!"
-    fi
-    echo "DuckPowered has been installed."
-    cd ..
-    touch .runbefore
+            echo "If you chnage your mind about this disable, please run duckpowered install"
+	    fi
+else
+	echo "intel_pstate not found, you are good to go!"
+fi
 else
     echo "DuckPowered is running in the background right now!"
 fi
