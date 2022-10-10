@@ -44,7 +44,7 @@ parts:
       apt install bc
       duckpowered_bcloc=$(whereis bc | awk '{print $2}')
       cp "$duckpowered_bcloc" $SNAPCRAFT_PART_INSTALL/cargo
-      apt install modprobe
+      apt install kmod
       cp /usr/sbin/modprobe $SNAPCRAFT_PART_INSTALL/cargo/root
       
     organize:
