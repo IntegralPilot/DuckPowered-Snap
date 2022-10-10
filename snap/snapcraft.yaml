@@ -73,8 +73,7 @@ parts:
       duckpowered_roachloc=$(whereis grub-mkconfig | awk '{print $2}')
       cp "$duckpowered_roachloc" $SNAPCRAFT_PART_INSTALL/cargo/root
       apt -y install zenity
-      duckpowered_zenloc=$(whereis zenity | awk '{print $3}')
-      cp "$duckpowered_zenloc" $SNAPCRAFT_PART_INSTALL/cargo
+      cp /usr/bin/zenity $SNAPCRAFT_PART_INSTALL/cargo
       
       
     organize:
