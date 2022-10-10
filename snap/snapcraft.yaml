@@ -16,12 +16,18 @@ plugs:
        - /etc/default/grub
    duckpowered-system-observe:
      interface: system-observe
+   duckpowered-wayland:
+     interface: wayland
+   duckpowered-x11:
+     interface: x11
 
 apps:
   duckpowered:
     command: usr/bin/run
     plugs:
       - duckpowered-system-files
+      - duckpowered-wayland
+      - duckpowered-x11
   duckpowered-service:
     command: usr/bin/run start
     plugs:
@@ -33,6 +39,8 @@ hooks:
   install:
     plugs:
       - duckpowered-system-files
+      - duckpowered-wayland
+      - duckpowered-x11
       # the following may not be needed
       - duckpowered-system-observe
   remove:
@@ -54,16 +62,20 @@ parts:
       cp /usr/bin/vmstat $SNAPCRAFT_PART_INSTALL/cargo
       cp /usr/bin/getconf $SNAPCRAFT_PART_INSTALL/cargo
       cp /usr/bin/lscpu $SNAPCRAFT_PART_INSTALL/cargo
-      apt install bc
+      apt -y install bc
       duckpowered_bcloc=$(whereis bc | awk '{print $2}')
       cp "$duckpowered_bcloc" $SNAPCRAFT_PART_INSTALL/cargo
-      apt install apt-utils
-      apt install kmod
+      apt -y install apt-utils
+      apt -y install kmod
       duckpowered_mploc=$(whereis modprobe | awk '{print $2}')
       cp "$duckpowered_mploc" $SNAPCRAFT_PART_INSTALL/cargo/root
-      apt install grub-common
+      apt -y install grub-common
       duckpowered_roachloc=$(whereis grub-mkconfig | awk '{print $2}')
       cp "$duckpowered_roachloc" $SNAPCRAFT_PART_INSTALL/cargo/root
+      apt -y install zenity
+      duckpowered_zenloc=$(whereis zenity | awk '{print $3}')
+      cp "$duckpowered_zenloc" $SNAPCRAFT_PART_INSTALL/cargo
+      
       
     organize:
       duckpowered.sh: usr/bin/run
