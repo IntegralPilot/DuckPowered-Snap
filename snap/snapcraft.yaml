@@ -5,11 +5,29 @@ summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
 grade: stable
-confinement: classic
+confinement: strict
+
+plugs:
+   duckpowered-cpu-control:
+     interface: cpu-control
+   duckpowered-system-files:
+     interface: system-files
+     write:
+       - /etc/default/grub
+   duckpowered-system-observe:
+     interface: system-observe
 
 apps:
   duckpowered:
     command: usr/bin/run
+    plugs:
+      - duckpowered-system-files
+  duckpowered-service:
+    command: usr/bin/run start
+    plugs:
+      - duckpowered-cpu-control
+      - duckpowered-system-observe
+    daemon: simple    
 
 parts:
   copy-runscript:
@@ -18,5 +36,13 @@ parts:
     override-build: |
       snapcraftctl build
       chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered.sh
+      mkdir $SNAPCRAFT_PART_INSTALL/cargo
+      mkdir $SNAPCRAFT_PART_INSTALL/cargo/root
+      cp /usr/bin/vmstat $SNAPCRAFT_PART_INSTALL/cargo
+      cp /usr/bin/getconf $SNAPCRAFT_PART_INSTALL/cargo
+      cp /usr/bin/lscpu $SNAPCRAFT_PART_INSTALL/cargo
+      cp /usr/bin/bc $SNAPCRAFT_PART_INSTALL/cargo
+      cp /usr/sbin/modprobe $SNAPCRAFT_PART_INSTALL/cargo/root
+      
     organize:
       duckpowered.sh: usr/bin/run
