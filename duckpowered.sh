@@ -79,8 +79,7 @@ do
 		underpowered_preclock_decrease=$(("$underpowered_preclock_decrease" + 1))
 		underpowered_current_clock_speed=$(cat "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")
 		underpowered_clock_decrease=$(echo "$underpowered_preclock_decrease"\*"$underpowered_current_clock_speed | $SNAP/cargo/bc")
-		underpowered_new_clock_speed=$(echo "$underpowered_current_clock_speed"+"$underpowered_clock_decrease" | $SNAP/cargo/bc)
-		underpowered_new_clock_speed=$(echo $(( `echo "$underpowered_new_clock_speed"|cut -f1 -d"."` + 1 )))
+		underpowered_new_clock_speed=$(echo $(( `echo "$underpowered_preclock_decrease"|cut -f1 -d"."` + 1 )))
 		for i in $(seq "$underpowered_activecores")
 		do
 			echo "Clock" $underpowered_clock_decrease + "new " + $underpowered_new_clock_speed
