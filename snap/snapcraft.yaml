@@ -10,10 +10,11 @@ confinement: strict
 plugs:
    duckpowered-cpu-control:
      interface: cpu-control
-   duckpowered-system-files:
-     interface: system-files
-     write:
-       - /etc/default/grub
+   duckpowered-kernel-module-load:
+     interface: kernel-module-load
+     modules:
+     - name: intel_pstate
+       load: denied
    duckpowered-system-observe:
      interface: system-observe
    duckpowered-wayland:
