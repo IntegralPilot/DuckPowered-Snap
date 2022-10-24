@@ -7,7 +7,7 @@ Tests have shown that our app chooses a 66% lower clock speed at idle vs Linux B
 
 Benchmarking scores (CPU-Z Score, both single and mutli thread) are not affected (give or take 1-10 points).
 
-We don't guarentte any of this however, and this software is distrubted in the hope it will be useful, but WITHOUT ANY WARRENTY OF ANY KIND, ETHEIR EXPRESS OR IMPLIED.
+We don't guarantee any of this, however, and this software is distributed in the hope it will be useful, but WITHOUT ANY WARRENTY OF ANY KIND, ETHEIR EXPRESS OR IMPLIED.
 
 Note that this is the Snap version of the app, we have many other solutions avaliable.
 
