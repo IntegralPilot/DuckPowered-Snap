@@ -1,55 +1,45 @@
 name: duckpowered
 base: core20
-version: '0.1a'
+version: '0.1b'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
 grade: stable
 confinement: strict
 
+
+layout:
+  /usr/bin:
+     bind: $SNAP/shipping
+
 plugs:
-   duckpowered-cpu-control:
-     interface: cpu-control
-   duckpowered-kernel-module-load:
+  cpu-control:
+    interface: cpu-control
+  kernel-module-load-deny-intel-pstate:
      interface: kernel-module-load
      modules:
-     - name: intel_pstate
-       load: denied
-   duckpowered-system-observe:
+       - name: intel_pstate
+         load: denied
+  system-observe:
      interface: system-observe
-   duckpowered-wayland:
-     interface: wayland
-   duckpowered-x11:
-     interface: x11
-
+ 
+ 
 apps:
   duckpowered:
     command: usr/bin/run
+    adapter: none
     plugs:
-      - duckpowered-system-files
-      - duckpowered-wayland
-      - duckpowered-x11
-  duckpowered-service:
-    command: usr/bin/run start
+      - cpu-control
+      - system-observe
+      - kernel-module-load-deny-intel-pstate
+  actual-service:
+    command: usr/bin/run
+    adapter: none
     plugs:
-      - duckpowered-cpu-control
-      - duckpowered-system-observe
+      - cpu-control
+      - system-observe
+      - kernel-module-load-deny-intel-pstate
     daemon: simple    
-
-hooks:
-  install:
-    plugs:
-      - duckpowered-system-files
-      - duckpowered-wayland
-      - duckpowered-x11
-      # the following may not be needed
-      - duckpowered-system-observe
-  remove:
-    plugs:
-      - duckpowered-system-files
-      # the following may not be needed
-      - duckpowered-system-observe
-    
 
 parts:
   runscript:
@@ -57,41 +47,18 @@ parts:
     source: .
     override-build: |
       snapcraftctl build
-      chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered.sh
-      mkdir $SNAPCRAFT_PART_INSTALL/cargo
-      mkdir $SNAPCRAFT_PART_INSTALL/cargo/root
-      cp /usr/bin/vmstat $SNAPCRAFT_PART_INSTALL/cargo
-      cp /usr/bin/getconf $SNAPCRAFT_PART_INSTALL/cargo
-      cp /usr/bin/lscpu $SNAPCRAFT_PART_INSTALL/cargo
-      apt -y install bc
-      duckpowered_bcloc=$(whereis bc | awk '{print $2}')
-      cp "$duckpowered_bcloc" $SNAPCRAFT_PART_INSTALL/cargo
-      apt -y install apt-utils
-      apt -y install kmod
-      duckpowered_mploc=$(whereis modprobe | awk '{print $2}')
-      cp "$duckpowered_mploc" $SNAPCRAFT_PART_INSTALL/cargo/root
-      apt -y install grub-common
-      duckpowered_roachloc=$(whereis grub-mkconfig | awk '{print $2}')
-      cp "$duckpowered_roachloc" $SNAPCRAFT_PART_INSTALL/cargo/root
-      apt -y install zenity
-      cp /usr/bin/zenity $SNAPCRAFT_PART_INSTALL/cargo
-      
+      mkdir $SNAPCRAFT_PART_INSTALL/shipping
+      cp /usr/bin/vmstat $SNAPCRAFT_PART_INSTALL/shipping
+      cp /usr/bin/lscpu $SNAPCRAFT_PART_INSTALL/shipping
+      cp /usr/bin/awk $SNAPCRAFT_PART_INSTALL/shipping
+      cp /bin/cat $SNAPCRAFT_PART_INSTALL/shipping
+      cp /usr/bin/tail $SNAPCRAFT_PART_INSTALL/shipping
+      cp /usr/bin/tee $SNAPCRAFT_PART_INSTALL/shipping
+      cp /bin/grep $SNAPCRAFT_PART_INSTALL/shipping
+      apt -y install bash
+      cp /bin/bash $SNAPCRAFT_PART_INSTALL/shipping
+      chmod +x $SNAPCRAFT_PART_INSTALL/actual-service/main.sh
+      cp $SNAPCRAFT_PART_INSTALL/actual-service/main.sh $SNAPCRAFT_PART_INSTALL
       
     organize:
-      duckpowered.sh: usr/bin/run
-  install-hook:
-      plugin: dump
-      source: .
-      override-build: |
-        snapcraftctl build
-        chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered-install-hook.sh
-      organize:
-        duckpowered-install-hook.sh: snap/hooks/install
-  remove-hook:
-      plugin: dump
-      source: .
-      override-build: |
-        snapcraftctl build
-        chmod +x $SNAPCRAFT_PART_INSTALL/duckpowered-remove-hook.sh
-      organize:
-        duckpowered-remove-hook.sh: snap/hooks/remove
+      main.sh: usr/bin/run
