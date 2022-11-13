@@ -1,6 +1,6 @@
 name: duckpowered
 base: core20
-version: '0.1b'
+version: 'Magnificent Mallard Rev. 1'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
@@ -9,42 +9,35 @@ confinement: strict
 
 
 layout:
-  /usr/bin:
-     bind: $SNAP/shipping
+  /etc/duckpowered:
+     bind: $SNAP_DATA
+  /usr/quack/env:
+    bind: $SNAP/shipping
 
 plugs:
   cpu-control:
     interface: cpu-control
-  kernel-module-load-deny-intel-pstate:
-     interface: kernel-module-load
-     modules:
-       - name: intel_pstate
-         load: denied
   system-observe:
      interface: system-observe
  
  
 apps:
   duckpowered:
-    command: usr/bin/run
+    extensions: [gnome-3-38]
+    command: usr/bin/dash
     adapter: none
-    plugs:
-      - cpu-control
-      - system-observe
-      - kernel-module-load-deny-intel-pstate
   actual-service:
     command: usr/bin/run
     adapter: none
     plugs:
       - cpu-control
       - system-observe
-      - kernel-module-load-deny-intel-pstate
     daemon: simple    
 
 parts:
-  runscript:
+  actual-service:
     plugin: dump
-    source: .
+    source: ./actual-service
     override-build: |
       snapcraftctl build
       mkdir $SNAPCRAFT_PART_INSTALL/shipping
@@ -57,8 +50,30 @@ parts:
       cp /bin/grep $SNAPCRAFT_PART_INSTALL/shipping
       apt -y install bash
       cp /bin/bash $SNAPCRAFT_PART_INSTALL/shipping
-      chmod +x $SNAPCRAFT_PART_INSTALL/actual-service/main.sh
-      cp $SNAPCRAFT_PART_INSTALL/actual-service/main.sh $SNAPCRAFT_PART_INSTALL
+      chmod +x $SNAPCRAFT_PART_INSTALL/main.sh
       
     organize:
       main.sh: usr/bin/run
+      
+  gui:
+    plugin: dump
+    source: ./gui
+    override-build: |
+      snapcraftctl build
+      cd $SNAPCRAFT_PART_INSTALL
+      snap install rustup --classic
+      rustup install stable
+      rustup default stable
+      fallocate -l 8G /buildSwapfile
+      chmod 600 /buildSwapfile
+      mkswap /buildSwapfile
+      swapon /buildSwapfile
+      cargo install tauri-cli
+      apt -y install libssl-dev
+      cargo tauri build -b none
+      cp ./src-tauri/target/release/duck-powered-dashboard .
+      chmod +x ./duck-powered-dashboard
+      rm -r ./src-tauri/target
+    organize:
+      duck-powered-dashboard: usr/bin/dash
+

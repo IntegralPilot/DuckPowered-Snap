@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html id="htmlt">
+    <head>
+        <meta charset="utf-8">
+        <title>DuckPowered Dashboard</title>
+       <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" /> 
+        <style>
+        body {
+            font-family: "Raleway", monospace;
+        }
+        html {
+            overflow-y: scroll;
+        }
+       
+#minitopbox ul, #totop, #topbox ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: cadetblue;
+  width: 100%;
+}
+
+#minitopbox li a, #topbox li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+}
+
+#totop li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding-top: 20%;
+}
+
+li a:hover {
+  background-color: red;
+}
+          ::-webkit-scrollbar {
+                width: 10px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #f7f7f7;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: cadetblue;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: red;
+            } 
+            #quick-links {
+                background: #90EE90;
+                width: 70%;
+                padding: 5px 5px 5px 2px;
+                border: 3px ridge blue;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #minitopbox {
+                position: fixed;
+                z-index: 1;
+                width: 100%;
+                top: 0px;
+                display: none;
+            }
+            #totop {
+                position: fixed;
+                z-index: 0;
+                bottom: 10px;
+                right: 10px;
+                background-color: cadetblue;
+                border: 3px solid red;
+                color: white;
+                display: none;
+                border: 3px solid red;
+                box-shadow: 0 0 10px rgba(0,0,0,0.25);
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                outline: none;
+                cursor: pointer;
+                
+}
+        #totop:hover {
+            background-color: red;
+        }
+        .progress-bar {
+            background-color: red;
+            height: 4px;
+        }
+#topbox {
+  overflow: hidden;
+}
+
+#topbox .background{
+   filter: blur(2px);
+  /* Include Vendor Tags for all popular browsers to ensure compadibility */
+  -webkit-filter: blur(2px);
+  -ms-filter: blur(2px);
+  -o-filter: blur(2px);
+  -moz-filter: blur(2px); 
+  
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 200px
+}
+
+#topbox h1{
+    font-size: 2.5em;
+}
+
+#topbox p {
+    font-size: 2em;
+}
+#topbox .content {
+  position: relative;
+  padding: 3px 3px 3px 3px;
+  text-align: center;
+  color: white;
+
+}
+
+
+#phfull {
+    margin: 30px 30px 30px 30px;
+    padding: 5px 5px 5px 5px;
+    width: 400px;
+    float: left;
+}
+
+#infobox {
+    margin: 30px 30px 30px 0px;
+    padding: 5px 5px 5px 5px;
+    width: 300px;
+    float: right;
+}
+
+#loginul {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    
+}
+
+#logindiv {
+    position: fixed;
+    z-index: 0;
+    top: 10px;
+    right: 10px;
+    background-color: cadetblue;
+    border: 3px solid red;
+    color: white;
+    display: block;
+    border: 3px solid red;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    width: 110px;
+    height: 120px;
+    outline: none;
+    cursor: pointer;
+}
+
+        </style>
+<script src="javascript/gaugeSVG.js"></script>
+<script type="module">
+var gauge1 = new GaugeSVG({
+    id: "phdashlet",
+    title: 'CPU Usage',
+    value: 0.0,
+    min: 0.0,
+    max: 100.0,
+    lowerActionLimit: 0.0,
+    lowerWarningLimit: 0.0,
+    upperWarningLimit: 65,
+    upperActionLimit: 85,
+    label: "percent"
+});
+function cur_use_update(cur_use) {
+    if (cur_use != gauge1.value) {
+        gauge1.refresh(cur_use, false)
+    }
+    if (cur_use > 84) {
+        document.getElementById("phfull").style.border = "8px red solid"
+    } else {
+        if (cur_use > 64) {
+            document.getElementById("phfull").style.border = "8px yellow solid"
+        }
+        else {
+            document.getElementById("phfull").style.border = "8px green solid"
+        }
+    }
+}
+
+function max_clock_update(max_clock) {
+	document.getElementById('maxclockreplaceme').innerText = max_clock
+}
+
+function cur_clock_update(cur_clock) {
+	document.getElementById('curclockreplaceme').innerText = cur_clock
+}
+// access the pre-bundled global API functions
+const { invoke } = window.__TAURI__.tauri
+
+for (;;) {
+// now we can call our Command!
+// Right-click the application background and open the developer tools.
+// You will see "Hello, World!" printed in the console!
+    invoke('usage')
+    // `invoke` returns a Promise
+     .then((response) => cur_use_update(response))
+ 
+    invoke('max_clock')
+    // `invoke` returns a Promise
+     .then((response) => max_clock_update(response))
+ 
+    invoke('new_clock')
+    // `invoke` returns a Promise
+     .then((response) => cur_clock_update(response))
+    
+     await new Promise(r => setTimeout(r, 2000));
+}
+</script> 
+    </head>
+    <body id="bodyt">
+    <div id="all">
+    <div id="topbox">
+  <img
+    class="background"
+    src="mallard-header.jfif"
+    alt=""
+  >
+  
+  <div class="content">
+    <h1 id="mainh1">DuckPowered Dashboard</h1>
+        <p>Version 0.1b</p>
+  </div>
+  <div id="phfull">
+    <center>
+     <div id="phdashlet" style="width:350px; height:300px"></div>
+    <p style="font-size: 0.995em"> A percentage which measures how much you are using your CPU, the brains of your computer. DuckPowered saves the most power when this is low. Try closing browser tabs or apps to reduce this.</p>
+    </center>
+  </div>
+  <div id="infobox"> 
+  <center>
+  <h2 style="font-size: 2.5em; font-weight: bold;"> Maximum Clock Speed </h2>
+  <h2 id="maxclockreplaceme"> Loading... </h2>
+  <HR NOSHADE="NOSHADE">
+    <h2 style="font-size: 2.5em; font-weight: bold;"> Current Clock Speed </h2>
+  <h2 id="curclockreplaceme"> Loading... </h2>
+  
+  </center>
+  </div>
+    </body>
+</html>
