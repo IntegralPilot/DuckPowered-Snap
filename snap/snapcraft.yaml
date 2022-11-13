@@ -1,6 +1,6 @@
 name: duckpowered
 base: core20
-version: 'Magnificent Mallard Rev. 1'
+version: '1.1a'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
