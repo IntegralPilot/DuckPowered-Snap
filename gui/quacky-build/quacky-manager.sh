@@ -20,6 +20,7 @@ GuiSupportedBuild () {
     chmod +x ./duck-powered-dashboard
     rm -r ./src-tauri/target
     cp ./gui-launcher.sh ./actual-gui-launch.sh
+    chmod 777 ./actual-gui-launch.sh
 }
 
 GuiDeniedBuild () {
@@ -27,6 +28,7 @@ GuiDeniedBuild () {
     touch duck-powered-dashboard
     chmod +x ./duck-powered-dashboard
     cp ./pp-gui-launcher.sh ./actual-gui-launch.sh
+    chmod 777 ./actual-gui-launch.sh
 }
 
 if [ "$cpu_arch" = "x86_64" ]; then
@@ -43,6 +45,12 @@ elif [ "$cpu_arch" == "ARMHF" ]; then
     GuiSupportedBuild
 elif [ "$cpu_arch" == "armhf" ]; then
     echo "[Quacky] Gui Supported Build! armhf"
+    GuiSupportedBuild
+elif [ "$cpu_arch" == "aarch64" ]; then
+    echo "[Quacky] Gui Supported Build! aarch64"
+    GuiSupportedBuild
+elif [ "$cpu_arch" == "aarch64" ]; then
+    echo "[Quacky] Gui Supported Build! armv7l"
     GuiSupportedBuild
 else
     echo "[Quacky] Gui is NOT Supported!" "$cpu_arch"
