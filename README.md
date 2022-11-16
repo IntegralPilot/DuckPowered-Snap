@@ -1,14 +1,10 @@
-# DuckPowered-Snap
-Our application is called DuckPowered, and the purpose of our app is to automatically underclock Intel CPUs in both Linux Servers and consumer-grade devices.
+**Meet DuckPowered**
 
-This underclocking is dynamic, and unique for every core, as the program receives input of the CPUs current usage and uses a smart algorithm to choose just the right clock speed.
 
-Tests have shown that our app chooses a 66% lower clock speed at idle vs Linux Balanced Governor (400MHz (DuckPowered) vs 900MHz (Balanced).
+DuckPowered automatically underclocks your CPU when your workload allows, and scales your CPU speed back up when you need performance. All automatically, in the background. This dynamic underclocking is possible because DuckPowered gets real-time information from your system to make an intelligent decision. You no longer need to make the trade off between power savings and performance, because you can have both!
 
-Benchmarking scores (CPU-Z Score, both single and mutli thread) are not affected (give or take 1-10 points).
+Just hit install -  and you are away! No technical experience needed. Save up to 80% of power, increase your battery life by two-thirds and receive the exact same benchmarking scores with DuckPowered!
 
-We don't guarantee any of this, however, and this software is distributed in the hope it will be useful, but WITHOUT ANY WARRENTY OF ANY KIND, ETHEIR EXPRESS OR IMPLIED.
+Monitor the power saving with our all-new graphical dashboard, complete with tips and tricks for you to maximise DuckPowered's power savings.
 
-Note that this is the Snap version of the app, we have many other solutions avaliable.
-
-All source code is open source, and GPL v3+ licensed.
+How can we reimagine our energy future for good? DuckPowered! 
