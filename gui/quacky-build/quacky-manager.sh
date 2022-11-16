@@ -49,7 +49,7 @@ elif [ "$cpu_arch" == "armhf" ]; then
 elif [ "$cpu_arch" == "aarch64" ]; then
     echo "[Quacky] Gui Supported Build! aarch64"
     GuiSupportedBuild
-elif [ "$cpu_arch" == "aarch64" ]; then
+elif [ "$cpu_arch" == "armv7l" ]; then
     echo "[Quacky] Gui Supported Build! armv7l"
     GuiSupportedBuild
 else
