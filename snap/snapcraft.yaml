@@ -1,12 +1,13 @@
 name: duckpowered
 base: core20
-version: '1.1c-pp'
+version: '1.1c-norm'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
 grade: stable
 confinement: strict
 
+# This is the snapcraft.yaml use to generate the ARM64, ARMHF and AMD64 builds. For the PowerPC Builds please see alt/snapcraft-alt.yaml
 
 layout:
   /etc/duckpowered:
@@ -25,6 +26,7 @@ plugs:
  
 apps:
   duckpowered:
+    extensions: [gnome-3-38]
     command: usr/bin/dashsh
     adapter: none
     plugs:
