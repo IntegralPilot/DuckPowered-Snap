@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=DuckPowered Dashboard
+Icon=${SNAP}/meta/gui/duckpowered.png
+Exec=duckpowered
+Terminal=true
+Categories=Utility;
