@@ -1,6 +1,6 @@
 name: duckpowered
 base: core20
-version: '1.1c-norm'
+version: '1.2a-norm'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
