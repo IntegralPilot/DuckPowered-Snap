@@ -8,3 +8,5 @@ Just hit install -  and you are away! No technical experience needed. Save up to
 Monitor the power saving with our all-new graphical dashboard, complete with tips and tricks for you to maximise DuckPowered's power savings.
 
 How can we reimagine our energy future for good? DuckPowered! 
+
+Nice program!
