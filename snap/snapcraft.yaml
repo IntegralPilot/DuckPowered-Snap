@@ -1,6 +1,6 @@
 name: duckpowered
 base: core20
-version: '1.2a-norm'
+version: '1.1d-norm'
 summary: Intelligent power savings that don't effect performance.
 description: |
   Tweet tweet.
@@ -26,7 +26,6 @@ plugs:
  
 apps:
   duckpowered:
-    extensions: [gnome-3-38]
     command: usr/bin/dashsh
     adapter: none
     plugs:
@@ -63,8 +62,13 @@ parts:
   gui:
     plugin: dump
     source: ./gui
+    stage-packages:
+      - libwebkit2gtk-4.0-37
+      - libgtk-3-0
+      - libappindicator3-1
     override-build: |
       snapcraftctl build
+      sudo apt install libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
       cd $SNAPCRAFT_PART_INSTALL
       chmod +x quacky-build/quacky-manager.sh
       ./quacky-build/quacky-manager.sh
