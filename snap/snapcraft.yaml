@@ -14,8 +14,6 @@ layout:
      bind: $SNAP_DATA
   /usr/quack/env:
     bind: $SNAP/shipping
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.0:
-    bind: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.0
 
 plugs:
   cpu-control:
